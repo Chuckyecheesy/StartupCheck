@@ -1937,7 +1937,13 @@ def main() -> None:
     load_dotenv(override=True)
     st.set_page_config(page_title="InvestorLens | Startup Proposal Analyst", layout="wide")
     st.title("🔍 InvestorLens")
-    st.caption("Upload your startup proposal for annotation and feedback of area of improvement to reach investor's interest for funding")
+    st.caption(
+        "From proposal upload to investor-ready rewrite in one guided flow."
+    )
+    st.markdown(
+        "1) **Upload proposal** -> 2) **Review annotations + scores** -> "
+        "3) **Rewrite weakest criterion** -> 4) **Check projected uplift**"
+    )
 
     missing_env = []
     if not os.environ.get("OPENAI_API_KEY"):
@@ -1947,7 +1953,7 @@ def main() -> None:
     if missing_env:
         st.warning(f"Missing environment variables: {', '.join(missing_env)}")
 
-    st.markdown("### Proposal source")
+    st.markdown("### Step 1 - Choose proposal source")
     source_mode = st.radio(
         "Choose input mode",
         options=["Upload PDF", "Use local PDF path"],
@@ -1985,7 +1991,7 @@ def main() -> None:
             st.error(f"Failed to read local PDF: {exc}")
             return
 
-    with st.spinner("Tailoring feedback and generating investor scores..."):
+    with st.spinner("Analyzing proposal against investor criteria..."):
         try:
             if source_mode == "Upload PDF":
                 assert uploaded is not None and file_bytes is not None
@@ -2020,7 +2026,7 @@ def main() -> None:
     left_col, right_col = st.columns([2, 1], gap="large")
 
     with left_col:
-        st.subheader("Annotated Proposal")
+        st.subheader("Step 2 - Annotated proposal")
         _render_pdf(annotated_pdf_bytes, height=760, note_markers=note_markers)
         highlight_notes = _collect_highlight_targets(analysis)
 
@@ -2057,12 +2063,16 @@ def main() -> None:
         )
 
     with right_col:
-        st.subheader("Scoring")
+        st.subheader("Step 2 - Scoring snapshot")
         investor_scores = score_result.get("scores_by_investor", [])
 
         st.metric("Total Score", f"{score_result['score_out_of_10']}/10")
         st.progress(min(max(score_result["score_out_of_10"] / 10.0, 0.0), 1.0))
         st.info(_verdict_text(score_result["score_out_of_10"]))
+        if score_result["score_out_of_10"] < 7.0:
+            st.warning("Next best action: run a targeted rewrite on the weakest area below.")
+        else:
+            st.success("Next best action: validate pitch clarity and generate final investor version.")
 
         if investor_scores:
             st.markdown("**Investor-specific scores**")
@@ -2080,13 +2090,13 @@ def main() -> None:
             st.success("No immediate critical refinements detected.")
 
         st.divider()
-        st.subheader("Suggested Rewrite")
+        st.subheader("Step 3 - Improve weakest area")
         flagged_items = _build_flagged_items(analysis)
         if not flagged_items:
             st.write("No major issue selected for rewrite guidance.")
         else:
             selected_idx = st.selectbox(
-                "Choose a criterion gap for rewrite (focus: weakest investor score)",
+                "Choose criterion gap to improve (targeting your weakest investor score)",
                 options=list(range(len(flagged_items))),
                 format_func=lambda i: str(flagged_items[i].get("name", "")).strip() or "Issue to improve",
             )
@@ -2122,8 +2132,8 @@ def main() -> None:
                 key="investorlens_fast_rewrite",
             )
 
-            if st.button("Rewrite"):
-                with st.spinner("Generating response..."):
+            if st.button("Generate targeted rewrite"):
+                with st.spinner("Generating grounded rewrite and impact preview..."):
                     try:
                         evidence_cache_key = hashlib.sha256(file_bytes).hexdigest()
                         evidence_queries = generate_query_plan_with_gemini(

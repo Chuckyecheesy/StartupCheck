@@ -1,0 +1,70 @@
+{
+  "proposal_pdf": "investor_proposal_sample1.pdf",
+  "criteria_used": [
+    "Market Opportunity",
+    "Founder Capability",
+    "Product Differentiation",
+    "Traction",
+    "Risk"
+  ],
+  "criteria_evaluation": [
+    {
+      "criterion": "Market Opportunity",
+      "status": "filled",
+      "evidence": "Total addressable market of 500 million consumers in high growth region",
+      "reason": "The proposal clearly identifies a significant market opportunity in an emerging region.",
+      "improvement": "Continue to monitor market trends and adjust strategies accordingly."
+    },
+    {
+      "criterion": "Founder Capability",
+      "status": "filled",
+      "evidence": "Strong and competent team with entrepreneurial spirit",
+      "reason": "The proposal highlights the team's capabilities and entrepreneurial mindset.",
+      "improvement": "Invest in continuous leadership development programs for the team."
+    },
+    {
+      "criterion": "Product Differentiation",
+      "status": "filled",
+      "evidence": "Proprietary technology for balance sheet lending & P2P lending",
+      "reason": "The proposal showcases unique technology that sets the product apart.",
+      "improvement": "Regularly assess competitors' offerings to maintain a competitive edge."
+    },
+    {
+      "criterion": "Traction",
+      "status": "filled",
+      "evidence": "In 2018 SW online lending business reported USD 7,5 Mln in revenues and an annual growth rate of 42%",
+      "reason": "The proposal demonstrates significant traction with substantial revenues and growth rate.",
+      "improvement": "Implement strategies to sustain and accelerate current growth rates."
+    },
+    {
+      "criterion": "Risk",
+      "status": "filled",
+      "evidence": "Sizeable gap between credit access and consumer needs puts the group in an advantageous position in underserved segment",
+      "reason": "The proposal acknowledges risks but also positions the group advantageously in an underserved segment.",
+      "improvement": "Develop a comprehensive risk management plan to mitigate potential challenges."
+    }
+  ],
+  "failure_mistakes_check": [
+    {
+      "mistake": "Poor product-market fit",
+      "present": "yes",
+      "evidence": "Majority of Emerging Asian population is underbanked and can't get basic consumer loans from traditional financial institutions.",
+      "risk": "Without a good product-market fit, the business may struggle to attract customers and generate revenue.",
+      "fix": "Conduct thorough market research to better understand the needs and preferences of the target consumer segments."
+    },
+    {
+      "mistake": "Running out of cash",
+      "present": "yes",
+      "evidence": "With sufficient funding we can grow faster.",
+      "risk": "Running out of cash can lead to operational issues, hinder growth, and potentially lead to business failure.",
+      "fix": "Develop a detailed financial plan, secure additional funding sources, and closely monitor cash flow."
+    },
+    {
+      "mistake": "Not having the right team",
+      "present": "yes",
+      "evidence": "We know our strengths and limitations, so we bring other strong people onboard to help us build solid international fintech business.",
+      "risk": "Having the wrong team can impact decision-making, execution, and overall success of the business.",
+      "fix": "Invest in recruiting and retaining top talent that complements the existing team's skills and expertise."
+    }
+  ]
+}

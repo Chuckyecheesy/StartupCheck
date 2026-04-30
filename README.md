@@ -92,6 +92,53 @@ python extract_proposal.py --help
 python scoring.py --help
 ```
 
+## Scoring computation
+
+`scoring.py` computes proposal quality on a 0-10 scale in two parts:
+
+1. **Criteria completeness score (0-10)**
+   - `filled` contributes full credit
+   - `partial` contributes half credit
+   - `missing` contributes no credit
+   - Formula:
+     - `completeness_ratio = (filled + 0.5 * partial) / total_criteria`
+     - `completeness_score = 10.0 * completeness_ratio`
+
+2. **Failure-risk penalty (0-3)**
+   - From `failure_mistakes_check`:
+     - `yes` counts as `1.0`
+     - `unclear` counts as `0.5`
+     - `no` counts as `0.0`
+   - Formula:
+     - `penalty_ratio = (present_yes + 0.5 * present_unclear) / total_failures`
+     - `failure_penalty = min(3.0, 3.0 * penalty_ratio)`
+
+**Final score**
+
+- `raw_score = completeness_score - failure_penalty`
+- `score_out_of_10 = clamp(raw_score, 0.0, 10.0)` (rounded to 2 decimals)
+- Investor-ready threshold: `score_out_of_10 >= 7.0`
+
+The same scoring logic is also applied per investor criteria source in `scores_by_investor`.
+
+### Worked example
+
+Suppose one proposal has:
+
+- Criteria evaluation: `filled=6`, `partial=2`, `missing=2` (total `10`)
+- Failure checks: `yes=2`, `unclear=2`, `no=4` (total `8`)
+
+Then:
+
+- `completeness_ratio = (6 + 0.5 * 2) / 10 = 0.70`
+- `completeness_score = 10 * 0.70 = 7.00`
+- `penalty_ratio = (2 + 0.5 * 2) / 8 = 0.375`
+- `failure_penalty = 3 * 0.375 = 1.125`
+- `raw_score = 7.00 - 1.125 = 5.875`
+- `score_out_of_10 = 5.88` (rounded to 2 decimals)
+
+Verdict: below the `7.0` threshold, so refinement actions are recommended.
+
 ## Other utilities
 
 - **`upload.py`** — Upload a PDF to an HTTP endpoint (`python upload.py file.pdf https://example.com/upload`).
